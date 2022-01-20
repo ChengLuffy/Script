@@ -1,31 +1,28 @@
-let url = $request.url;
-let body = JSON.parse($response.body);
+/*
+解锁知音漫客付费章节 (需登录)
 
-let user = '/app_api/v5/getuserinfo/';
-let coin = '/app_api/v5/coin_account/';
-let ticket = '/app_api/v5/getuserinfo_ticket/';
-let free = '/app_api/v5/getcomicinfo/';
+***************************
+QuantumultX:
 
-if (url.indexOf(user) != -1) {
-	body.data.coins = 6666;
-	body.data.isvip = 1;
-	body.data.recommend = 6666;
-	body.data.Cticket = 6666;
-	body.data.Cgold = 6666;
-}
-else if (url.indexOf(coin) != -1) {
-	body.data.coins = 6666;
-	body.data.golds = 6666;
-}
-else if (url.indexOf(ticket) != -1) {
-	body.data.Cticket = 6666;	
-} 
+[rewrite_local]
+^https:\/\/(userpurchased|user-api)\.zymk\.cn\/v\d\/(userpurchased\/paychapters|getuserinfo)\/ url script-response-body https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Zymh.js
 
-else if (url.indexOf(free) != -1) {
-	body.data.price = 0;
-	body.data.download_price = 0;
-}
+[mitm]
+hostname = user*.zymk.cn
 
-	body = JSON.stringify(body);
+***************************
+Surge4 or Loon:
 
-$done({body});
+[Script]
+http-response ^https:\/\/(userpurchased|user-api)\.zymk\.cn\/v\d\/(userpurchased\/paychapters|getuserinfo)\/ requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Zymh.js
+
+[MITM]
+hostname = user*.zymk.cn
+**************************/
+
+var obj = JSON.parse($response.body);
+obj.status = 0;
+obj.data.isvip = 1;
+obj.data.coins = 6666;
+obj.data.Cgold = 6666;
+$done({body: JSON.stringify(obj)});
